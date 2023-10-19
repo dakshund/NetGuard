@@ -206,7 +206,7 @@ public class AdapterLog extends CursorAdapter {
         // Application icon
         ApplicationInfo info = null;
         PackageManager pm = context.getPackageManager();
-        String[] pkg = pm.getPackagesForUid(uid);
+        String[] pkg = Util.getPackagesForUidSafe(pm, uid);
         if (pkg != null && pkg.length > 0)
             try {
                 info = pm.getApplicationInfo(pkg[0], 0);

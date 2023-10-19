@@ -1744,7 +1744,7 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
                 long ttl = (cursor.isNull(colTTL) ? 7 * 24 * 3600 * 1000L : cursor.getLong(colTTL));
 
                 if (isLockedDown(last_metered)) {
-                    String[] pkg = getPackageManager().getPackagesForUid(uid);
+                    String[] pkg = Util.getPackagesForUidSafe(getPackageManager(), uid);
                     if (pkg != null && pkg.length > 0) {
                         if (!lockdown.getBoolean(pkg[0], false))
                             continue;
@@ -2400,7 +2400,7 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
 
             // Get application info
             PackageManager pm = getPackageManager();
-            String[] packages = pm.getPackagesForUid(uid);
+            String[] packages = Util.getPackagesForUidSafe(pm, uid);
             if (packages == null || packages.length < 1)
                 throw new PackageManager.NameNotFoundException(Integer.toString(uid));
             boolean internet = Util.hasInternet(uid, this);
@@ -3166,7 +3166,7 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
 
         long since = 0;
         PackageManager pm = getPackageManager();
-        String[] packages = pm.getPackagesForUid(uid);
+        String[] packages = Util.getPackagesForUidSafe(pm, uid);
         if (packages != null && packages.length > 0)
             try {
                 since = pm.getPackageInfo(packages[0], 0).firstInstallTime;

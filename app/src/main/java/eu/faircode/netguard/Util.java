@@ -341,7 +341,7 @@ public class Util {
 
     public static boolean isSystem(int uid, Context context) {
         PackageManager pm = context.getPackageManager();
-        String[] pkgs = pm.getPackagesForUid(uid);
+        String[] pkgs = Util.getPackagesForUidSafe(pm, uid);
         if (pkgs != null)
             for (String pkg : pkgs)
                 if (isSystem(pkg, context))
@@ -372,7 +372,7 @@ public class Util {
 
     public static boolean hasInternet(int uid, Context context) {
         PackageManager pm = context.getPackageManager();
-        String[] pkgs = pm.getPackagesForUid(uid);
+        String[] pkgs = Util.getPackagesForUidSafe(pm, uid);
         if (pkgs != null)
             for (String pkg : pkgs)
                 if (hasInternet(pkg, context))
@@ -405,7 +405,7 @@ public class Util {
             listResult.add(context.getString(R.string.title_nobody));
         else {
             PackageManager pm = context.getPackageManager();
-            String[] pkgs = pm.getPackagesForUid(uid);
+            String[] pkgs = Util.getPackagesForUidSafe(pm, uid);
             if (pkgs != null)
                 for (String pkg : pkgs)
                     try {
@@ -894,5 +894,17 @@ public class Util {
         }
 
         return sb;
+    }
+
+    public static String[] getPackagesForUidSafe(PackageManager pm, int uid) {
+
+        if (pm == null) return null;
+        String[] pkg = null;
+
+        try {
+            pkg = pm.getPackagesForUid(uid);
+        } catch (SecurityException ignored) {}
+
+        return pkg;
     }
 }
