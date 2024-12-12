@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with NetGuard.  If not, see <http://www.gnu.org/licenses/>.
 
-    Copyright 2015-2019 by Marcel Bokhorst (M66B)
+    Copyright 2015-2024 by Marcel Bokhorst (M66B)
 */
 
 #include "netguard.h"
@@ -330,6 +330,8 @@ void handle_ip(const struct arguments *args,
         allowed = (redirect != NULL);
         if (redirect != NULL && (*redirect->raddr == 0 || redirect->rport == 0))
             redirect = NULL;
+        if (allowed && *server_name && is_domain_blocked(args, server_name))
+            allowed = 0;
     }
 
     // Handle allowed traffic
